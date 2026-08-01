@@ -188,7 +188,7 @@ npm run dev
 
 # 📸 Screenshots
 
-> Add screenshots here after deployment.
+> Screenshots will be added shortly.
 
 - Login Page
 - Signup Page
@@ -236,11 +236,11 @@ Fork the repository, create a feature branch, and submit a Pull Request.
 
 **Himanshu Shekhar**
 
-B.Tech Computer Science Engineering
+B.E Computer Science Engineering
 
-GitHub: https://github.com/YOUR_USERNAME
+GitHub: https://github.com/himanshushe06
 
-LinkedIn: https://linkedin.com/in/YOUR_LINKEDIN
+LinkedIn: https://www.linkedin.com/in/himanshu0602/
 
 ---
 
