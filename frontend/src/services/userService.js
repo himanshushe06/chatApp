@@ -5,22 +5,27 @@ export const getAllUsers = async () => {
     return data;
 };
 
+export const getAvailableUsers = async () => {
+    const { data } = await axiosInstance.get("/users/available");
+    return data;
+};
+
 export const getUserById = async (id) => {
     const { data } = await axiosInstance.get(`/users/${id}`);
     return data;
 };
 
-export const blockUser = async (userId) => {
+export const blockUser = async (blockedUserId) => {
     const { data } = await axiosInstance.patch("/users/block", {
-        userId,
+        blockedUserId,
     });
 
     return data;
 };
 
-export const unblockUser = async (userId) => {
+export const unblockUser = async (blockedUserId) => {
     const { data } = await axiosInstance.patch("/users/unblock", {
-        userId,
+        blockedUserId,
     });
 
     return data;

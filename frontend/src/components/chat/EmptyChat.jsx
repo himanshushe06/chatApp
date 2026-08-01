@@ -1,22 +1,32 @@
-import { MessageCircleMore } from "lucide-react";
+import { MessageCircle,ShieldCheck } from "lucide-react";
 
 const EmptyChat = () => {
     return (
-        <div className="h-full flex flex-col items-center justify-center text-center px-6">
-            <div className="h-24 w-24 rounded-full bg-zinc-900 flex items-center justify-center mb-6">
-                <MessageCircleMore
-                    size={45}
-                    className="text-indigo-500"
+        <div className=" flex-1 flex flex-col items-center justify-center bg-[var(--app-bg)] text-[var(--text-primary)] px-6 text-center">
+            {/* Icon */}
+            <div className=" w-20 h-20 rounded-3xl bg-[var(--surface-bg)] border border-[var(--border-color)] flex items-center justify-center shadow-lg mb-6">
+                <MessageCircle
+                    size={38}
+                    className="text-[var(--accent)]"
                 />
             </div>
 
-            <h2 className="text-3xl font-bold text-white mb-3">
-                Welcome to ChatApp
+            {/* Heading */}
+            <h2 className="text-2xl font-semibold mb-2">
+                Your Messages
             </h2>
 
-            <p className="text-zinc-400 max-w-md">
-                Select a conversation from the sidebar to start chatting with your friends.
+            {/* Description */}
+            <p className="text-sm text-[var(--text-secondary)] max-w-[360px] leading-6">
+                Select a conversation from the sidebar
+                to start chatting with your friends.
             </p>
+
+            {/* Security */}
+            <div className=" mt-8 flex items-center gap-2 text-xs text-[var(--text-secondary)]">
+                <ShieldCheck size={15} />
+                Private and secure messaging
+            </div>
         </div>
     );
 };

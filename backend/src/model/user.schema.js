@@ -32,7 +32,11 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:"User"
     }
-    ]
+    ],
+    about: {
+        type: String,
+        default: "Hey there! I am using Chat App."
+    },
 },
 {
     timestamps:true

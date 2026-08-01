@@ -1,17 +1,11 @@
 import Sidebar from "../components/chat/Sidebar";
-import ChatHeader from "../components/chat/ChatHeader";
-import ChatWindow from "../components/chat/ChatWindow";
-import MessageInput from "../components/chat/MessageInput";
 
-const ChatLayout = () => {
+const ChatLayout = ({ children }) => {
     return (
-        <div className="h-screen bg-zinc-950 flex overflow-hidden">
+        <div className="h-screen bg-[var(--app-bg)] flex overflow-hidden">
             <Sidebar />
-
-            <div className="flex flex-col flex-1">
-                <ChatHeader />
-                <ChatWindow />
-                <MessageInput />
+            <div className="flex-1 overflow-hidden">
+                {children}
             </div>
         </div>
     );

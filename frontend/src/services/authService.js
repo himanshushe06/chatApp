@@ -14,3 +14,15 @@ export const logout = async () => {
     const { data } = await axiosInstance.post("/auth/logout");
     return data;
 };
+export const updateProfile = async (formData) => {
+    const { data } = await axiosInstance.put(
+        "/auth/profile",
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }
+    );
+    return data;
+};

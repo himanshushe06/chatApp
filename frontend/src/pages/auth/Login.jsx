@@ -18,10 +18,7 @@ const Login = () => {
     const navigate = useNavigate();
     const { setUser } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-    });
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const [rememberMe, setRememberMe] = useState(false);
     const handleChange = (e) => {
         setFormData((prev) => ({
@@ -68,8 +65,8 @@ const Login = () => {
             </p>
 
             <form
-            onSubmit={handleSubmit}
-            className="space-y-5 mt-8"
+                onSubmit={handleSubmit}
+                className="space-y-5 mt-8"
             >
             <AuthInput
                 icon={Mail}
@@ -84,8 +81,6 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
             />
-
-
             <div className="flex justify-between items-center text-sm">
                 <label className="flex items-center gap-2 text-zinc-400">
                 <input
@@ -115,30 +110,21 @@ const Login = () => {
             </span>
             <div className="flex-1 h-px bg-zinc-700"></div>
             </div>
-
-
             <div className="space-y-3">
-
             <SocialButton
                 icon={<FcGoogle size={22} />}
                 title="Continue with Google"
             />
-
             </div>
-
             <p className="text-center text-zinc-400 mt-8">
-
-            Don't have an account?
-
-            <Link
-                to="/signup"
-                className="text-indigo-400 ml-2 hover:text-indigo-300"
-            >
-                Sign Up
-            </Link>
-
+                Don't have an account?
+                <Link
+                    to="/signup"
+                    className="text-indigo-400 ml-2 hover:text-indigo-300"
+                >
+                    Sign Up
+                </Link>
             </p>
-
         </motion.div>
         </AuthCard>
     );

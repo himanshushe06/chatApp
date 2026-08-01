@@ -1,6 +1,11 @@
 import userModule from "../model/user.schema.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import cloudinary from "../config/cloudinary.js";
+import OTP from "../model/Otp.js";
+import resend from "../config/resend.js";
+import { welcomeEmailTemplate } from "../utils/emailTemplates.js";
 
 const generateToken = (userId) => {
     return jwt.sign(
@@ -13,25 +18,21 @@ const generateToken = (userId) => {
         }
     );
 };
-
 const signup = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-
         // Validate required fields
         if (!username || !email || !password) {
             return res.status(400).json({
                 message: "All fields are required",
             });
         }
-
         // Username validation
         if (username.trim().length < 3) {
             return res.status(400).json({
                 message: "Username must be at least 3 characters",
             });
         }
-
         // Email validation
         const emailRegex =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -41,7 +42,6 @@ const signup = async (req, res) => {
                 message: "Invalid email format",
             });
         }
-
         // Password validation
         if (password.length < 8) {
             return res.status(400).json({
@@ -59,7 +59,16 @@ const signup = async (req, res) => {
                 message: "User already exists",
             });
         }
+        const otpDoc = await OTP.findOne({
+            email,
+        });
 
+        if (!otpDoc || !otpDoc.verified) {
+            return res.status(403).json({
+                success: false,
+                message: "Please verify your email first",
+            });
+        }
         const hashedPassword = await bcrypt.hash(
             password,
             10
@@ -71,8 +80,19 @@ const signup = async (req, res) => {
             password: hashedPassword,
         });
 
-        const token = generateToken(newUser._id);
+        try {
+            await resend.emails.send({
+                from: process.env.EMAIL_FROM,
+                to: email,
+                subject: "🎉 Welcome to ChatApp!",
+                html: welcomeEmailTemplate(username),
+            });
+        } catch (error) {
+            console.error("Welcome Email Error:", error);
+        }
 
+        await OTP.deleteOne({email});
+        const token = generateToken(newUser._id);
         res.cookie("token", token, {
             httpOnly: true,
             secure:
@@ -95,46 +115,32 @@ const signup = async (req, res) => {
             },
         });
     } catch (error) {
-        console.error("Signup Error:", error);
-
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
         });
     }
 };
-
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         if (!email || !password) {
             return res.status(400).json({
                 message:
                     "Email and password are required",
             });
         }
-
         const user = await userModule.findOne({ email });
-
-        console.log("Email received:", email);
-        console.log("User found:", user);
-
         if (!user) {
             return res.status(401).json({
                 message: "Invalid email or password",
             });
         }
-
         const passwordMatch = await bcrypt.compare(
             password,
             user.password
         );
-
-        console.log("Password Match:", passwordMatch);
-
         const token = generateToken(user._id);
-
         res.cookie("token", token, {
             httpOnly: true,
             secure:
@@ -165,7 +171,6 @@ const login = async (req, res) => {
         });
     }
 };
-
 const logout = async (req, res) => {
     try {
         res.clearCookie("token", {
@@ -177,23 +182,100 @@ const logout = async (req, res) => {
                     ? "none"
                     : "lax",
         });
-
         return res.status(200).json({
             success: true,
             message: "Logged out successfully",
         });
     } catch (error) {
-        console.error("Logout Error:", error);
-
         return res.status(500).json({
             success: false,
             message: "Internal Server Error",
         });
     }
 };
-
+const getCurrentUser = async (req, res) => {
+    try {
+        const user = await userModule
+            .findById(req.user.id)
+            .select("-password");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            user,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
+const updateProfile = async (req, res) => {
+    try {
+        const user = await userModule.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        const { username, about } = req.body;
+        if (username?.trim()) {
+            user.username = username.trim();
+        }
+        if (about !== undefined) {
+            user.about = about.trim();
+        }
+        if (req.file) {
+            const result =
+                await cloudinary.uploader.upload(
+                    req.file.path,
+                    {
+                        folder: "ChatApp/Profile",
+                        resource_type: "image",
+                    }
+                );
+            user.avatar = result.secure_url;
+            // Remove temporary local file
+            fs.unlink(req.file.path, (error) => {
+                if (error) {
+                    console.error(
+                        "Failed to remove temporary file:",
+                        error
+                    );
+                }
+            });
+        }
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: "Profile updated",
+            user,
+        });
+    } catch (error) {
+        console.error(
+            "Update Profile Error:",
+            error
+        );
+        // Try cleaning temporary file if Cloudinary/upload fails
+        if (req.file?.path) {
+            fs.unlink(req.file.path, () => {});
+        }
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Internal Server Error",
+        });
+    }
+};
 export default {
     signup,
     login,
     logout,
+    getCurrentUser,
+    updateProfile
 };

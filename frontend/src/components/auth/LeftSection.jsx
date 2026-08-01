@@ -5,17 +5,17 @@ const features = [
     {
         icon: ShieldCheck,
         title: "End-to-End Secure",
-        subtitle: "Your privacy is our priority",
+        subtitle: "JWT authentication & encrypted conversations."
     },
     {
         icon: Zap,
         title: "Real-time Messaging",
-        subtitle: "Instant delivery, always",
+        subtitle: "Typing, voice notes, reactions and message status."
     },
     {
         icon: Users,
         title: "Groups & Communities",
-        subtitle: "Chat in groups, share more",
+        subtitle: "Private chats, groups and seamless collaboration."
     },
 ];
 
@@ -31,7 +31,7 @@ const LeftSection = () => {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-4"
             >
-            <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+            <div className="h-14 w-14 rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
                 <MessageCircle className="text-white" size={30} />
             </div>
 
@@ -41,28 +41,25 @@ const LeftSection = () => {
             </motion.div>
 
             <motion.h2
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: .2 }}
-            className="mt-16 text-6xl font-extrabold leading-tight text-white"
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-16 text-6xl xl:text-7xl font-black leading-[1.05] tracking-tight text-white"
             >
-            Welcome
-            <br />
-
-            <span className="text-indigo-500">
-                Back 👋
-            </span>
+                welcome
             </motion.h2>
 
             <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: .35 }}
-            className="mt-8 text-xl text-zinc-400 leading-9"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: .35 }}
+                className="mt-8 max-w-lg text-lg text-zinc-400 leading-8"
             >
-            Connect instantly with friends,
-            colleagues and communities
-            around the world.
+                A modern real-time messaging platform
+                built for individuals, teams and
+                communities.
+
+                Fast. Secure. Reliable.
             </motion.p>
 
             <div className="mt-14 space-y-5">
@@ -72,14 +69,19 @@ const LeftSection = () => {
                         <motion.div
                             whileHover={{ x: 10 }}
                             key={item.title}
-                            className="flex items-center gap-5 rounded-2xl border border-zinc-800 bg-white/5 backdrop-blur-lg p-5"
+                            className="group flex items-center gap-5 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition-all duration-300 hover:bg-white/10 hover:border-indigo-500/50 hover:shadow-[0_0_35px_rgba(99,102,241,.18)] "
                         >
-                        <div className="h-14 w-14 rounded-xl bg-indigo-600/20 flex items-center justify-center">
+                        <motion.div whileHover={{
+                                rotate: 8,
+                                scale: 1.15,
+                            }}
+                            className="h-14 w-14 rounded-2xl bg-indigo-500/15 flex items-center justify-center"
+                        >
                             <Icon
                                 className="text-indigo-400"
                                 size={28}
                             />
-                        </div>
+                        </motion.div>
                         <div>
                             <h3 className="text-lg font-semibold text-white">
                                 {item.title}

@@ -8,10 +8,10 @@ const messageSchema = new mongoose.Schema(
         required:true
     },
 
-    receiver:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+    receiver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null
     },
 
     text:{
@@ -19,9 +19,10 @@ const messageSchema = new mongoose.Schema(
         default:""
     },
 
-    seen:{
-        type:Boolean,
-        default:false
+    status: {
+        type: String,
+        enum: ["sent", "delivered", "seen"],
+        default: "sent"
     },
     image:{
         type:String,
@@ -31,14 +32,62 @@ const messageSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Chat"
     },
+    replyTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+        default: null
+    },
     isDeleted: {
+        type: Boolean,
+        default: false
+    },
+    replyToDeleted: {
+        type: Boolean,
+        default: false
+    },
+    isEdited: {
         type: Boolean,
         default: false
     },
     audio:{
         type:String,
         default:null
-    }
+    },
+    file: {
+        type: String,
+        default: null
+    },
+    fileUrl: {
+        type: String,
+        default: null
+    },
+    fileName: {
+        type: String,
+        default: null
+    },
+
+    fileType: {
+        type: String,
+        default: null
+    },
+
+    fileSize: {
+        type: Number,
+        default: null
+    },
+    reactions: [
+        {
+            user: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+                required: true
+            },
+            emoji: {
+                type: String,
+                required: true
+            }
+        }
+    ]
 },
 {
     timestamps:true
