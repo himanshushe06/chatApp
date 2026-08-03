@@ -124,13 +124,8 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        if (!email || !password) {
-            return res.status(400).json({
-                message:
-                    "Email and password are required",
-            });
-        }
         const user = await userModule.findOne({ email });
+
         if (!user) {
             return res.status(401).json({
                 message: "Invalid email or password",
@@ -140,11 +135,19 @@ const login = async (req, res) => {
             password,
             user.password
         );
+
+        if (!passwordMatch) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid email or password",
+            });
+        }
+
         const token = generateToken(user._id);
+
         res.cookie("token", token, {
             httpOnly: true,
-            secure:
-                process.env.NODE_ENV === "production",
+            secure: process.env.NODE_ENV === "production",
             sameSite:
                 process.env.NODE_ENV === "production"
                     ? "none"
@@ -162,15 +165,12 @@ const login = async (req, res) => {
                 avatar: user.avatar,
             },
         });
+
     } catch (error) {
-        console.error("Login Error:", error);
-        console.error("LOGIN ERROR:");
-        console.error(err);
-        console.error(err.stack);
 
         return res.status(500).json({
             success: false,
-            message: "Internal Server Error",
+            message: error.message,
         });
     }
 };
