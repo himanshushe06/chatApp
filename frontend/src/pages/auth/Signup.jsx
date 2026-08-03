@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, Lock, MessageCircle } from "lucide-react";
+import { User, Mail, Lock, MessageCircle,Eye,EyeOff } from "lucide-react";
 import { signup } from "../../services/authService";
 import { sendOTP, verifyOTP } from "../../services/otpService";
 import OTPModal from "../../components/auth/OTPModal";
@@ -22,6 +22,7 @@ const Signup = () => {
     const [verified, setVerified] = useState(false);
     const [countdown, setCountdown] = useState(30);
     const [canResend, setCanResend] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const handleChange = (e) => {
         setFormData((prev) => ({
         ...prev,
@@ -30,15 +31,49 @@ const Signup = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const { username, email, password } = formData;
+
+        // Username
+        if (username.trim().length < 3) {
+            toast.error("Username must be at least 3 characters");
+            return;
+        }
+
+        // Email
+        if (!email.trim()) {
+            toast.error("Email is required");
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            toast.error("Please enter a valid email");
+            return;
+        }
+
+        // Password
+        if (password.length < 8) {
+            toast.error("Password must be at least 8 characters");
+            return;
+        }
+
         try {
             setLoading(true);
-            await sendOTP(formData.email);
+
+            await sendOTP(formData);
+
             toast.success("OTP sent successfully");
+
             setOtpOpen(true);
+            setCountdown(30);
+            setCanResend(false);
+            setOtp(Array(6).fill(""));
+
         } catch (err) {
             toast.error(
-                err.response?.data?.message ||
-                "Failed to send OTP"
+                err.response?.data?.message || "Failed to send OTP"
             );
         } finally {
             setLoading(false);
@@ -63,7 +98,7 @@ const Signup = () => {
     };
     const handleResendOTP = async () => {
         try {
-            await sendOTP(formData.email);
+            await sendOTP(formData);
             toast.success("OTP sent again");
             setCountdown(30);
             setCanResend(false);
@@ -78,14 +113,11 @@ const Signup = () => {
     const handleContinue = async () => {
         try {
             await signup(formData);
-            toast.success(
-                "Account created successfully"
-            );
+            toast.success( "Account created successfully" );
             navigate("/chat");
         } catch (err) {
             toast.error(
-                err.response?.data?.message ||
-                "Signup failed"
+                err.response?.data?.message || "Signup failed"
             );
         }
     };
@@ -100,6 +132,11 @@ const Signup = () => {
         }, 1000);
         return () => clearTimeout(timer);
     }, [countdown, otpOpen]);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isFormValid =
+        formData.username.trim().length >= 3 &&
+        emailRegex.test(formData.email) &&
+        formData.password.length >= 8;
     return (
         <div className="w-full max-w-md bg-zinc-900 rounded-3xl shadow-xl p-8">
             <div className="flex flex-col items-center mb-8">
@@ -118,20 +155,29 @@ const Signup = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="relative">
-                    <User
-                        size={20}
-                        className="absolute left-4 top-4 text-zinc-400"
-                    />
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        required
-                        value={formData.username}
-                        onChange={handleChange}
-                        className="w-full bg-zinc-800 rounded-xl py-3 pl-12 pr-4 text-white outline-none"
-                    />
+                <div>
+                    <div className="relative">
+                        <User
+                            size={20}
+                            className="absolute left-4 top-4 text-zinc-400"
+                        />
+
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Username"
+                            required
+                            value={formData.username}
+                            onChange={handleChange}
+                            className="w-full bg-zinc-800 rounded-xl py-3 pl-12 pr-4 text-white outline-none"
+                        />
+                    </div>
+
+                    {formData.username && formData.username.trim().length < 3 && (
+                            <p className="mt-1 text-sm text-red-400">
+                                Username must be at least 3 characters.
+                            </p>
+                        )}
                 </div>
 
                 <div className="relative">
@@ -145,25 +191,52 @@ const Signup = () => {
                         onChange={handleChange}
                         className="w-full bg-zinc-800 rounded-xl py-3 pl-12 pr-4 text-white outline-none"
                     />
+                    {formData.email && !emailRegex.test(formData.email) && (
+                            <p className="mt-1 text-sm text-red-400">
+                                Please enter a valid email.
+                            </p>
+                    )}
                 </div>
 
                 <div className="relative">
-                    <Lock size={20} className="absolute left-4 top-4 text-zinc-400"/>
+                    <Lock
+                        size={20}
+                        className="absolute left-4 top-4 text-zinc-400"
+                    />
+
                     <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         name="password"
                         placeholder="Password"
                         required
                         value={formData.password}
                         onChange={handleChange}
-                        className="w-full bg-zinc-800 rounded-xl py-3 pl-12 pr-4 text-white outline-none"
+                        className="w-full bg-zinc-800 rounded-xl py-3 pl-12 pr-12 text-white outline-none"
                     />
+
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-4 text-zinc-400 hover:text-white"
+                    >
+                        {showPassword ? (
+                            <EyeOff size={20} />
+                        ) : (
+                            <Eye size={20} />
+                        )}
+                    </button>
                 </div>
 
-                <button disabled={loading}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 transition py-3 rounded-xl text-white font-semibold"
+                <button
+                    type="submit"
+                    disabled={!isFormValid || loading}
+                    className={`w-full py-3 rounded-xl text-white font-semibold transition ${
+                        isFormValid
+                            ? "bg-indigo-600 hover:bg-indigo-700"
+                            : "bg-zinc-700 cursor-not-allowed"
+                    }`}
                 >
-                    {loading ? "Creating..." : "Create Account"}
+                    {loading ? "Sending OTP..." : "Create Account"}
                 </button>
 
             </form>

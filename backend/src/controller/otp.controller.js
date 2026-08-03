@@ -6,19 +6,45 @@ import { generateOTP,hashOTP,verifyOTP,getOTPExpiry } from "../utils/otp.js";
 const otpController = {};
 otpController.sendOTP = async (req,res) => {
     try {
-        const email = req.body.email?.trim().toLowerCase();
+        const { username,email,password } = req.body;
+        const normalizedEmail = email?.trim().toLowerCase();
 
-        if (!email) {
+        // Username validation
+        if (!username || username.trim().length < 3) {
             return res.status(400).json({
                 success: false,
-                message:
-                    "Email is required",
+                message: "Username must be at least 3 characters",
+            });
+        }
+
+        // Email validation
+        if (!normalizedEmail) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required",
+            });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(normalizedEmail)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid email format",
+            });
+        }
+
+        // Password validation
+        if (!password || password.length < 8) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must be at least 8 characters long",
             });
         }
 
         const existingUser = await User.findOne({
-                email,
-            });
+            email: normalizedEmail,
+        });
 
         if (existingUser) {
             return res.status(409).json({
@@ -29,20 +55,20 @@ otpController.sendOTP = async (req,res) => {
         }
 
         await OTP.deleteMany({
-            email,
+            email: normalizedEmail,
         });
         const otp = generateOTP();
         const hashedOTP = hashOTP(otp);
         const expiresAt =getOTPExpiry();
         await OTP.create({
-            email,
+            email: normalizedEmail,
             otp: hashedOTP,
             expiresAt,
         });
 
         await resend.emails.send({
             from: process.env.EMAIL_FROM,
-            to: email,
+            to: normalizedEmail,
             subject:
                 "Verify your ChatApp account",
 
