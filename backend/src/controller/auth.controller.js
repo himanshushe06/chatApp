@@ -164,6 +164,9 @@ const login = async (req, res) => {
         });
     } catch (error) {
         console.error("Login Error:", error);
+        console.error("LOGIN ERROR:");
+        console.error(err);
+        console.error(err.stack);
 
         return res.status(500).json({
             success: false,
