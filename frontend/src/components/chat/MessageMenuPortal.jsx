@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Reply, Pencil, Trash2 } from "lucide-react";
 import { useMessageMenu } from "../../context/MessageMenuContext";
-import ConfirmModal from "../common/ConfirmModal";
+import ConfirmModal from "../Common/ConfirmModal";
 import { useAuth } from "../../context/AuthContext";
 import { useChat } from "../../context/ChatContext";
 import { deleteMessage,reactToMessage } from "../../services/messageService";
