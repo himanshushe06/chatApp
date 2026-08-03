@@ -10,9 +10,14 @@ import { setIO } from "./src/socket/socketManager.js";
 
 const PORT = process.env.PORT || 4000;
 const server = http.createServer(app);
+const allowedOrigins = [
+    "https://www.chattalk.website",
+    "https://chat-c5u693dei-self-68af.vercel.app",
+];
+
 const io = new Server(server, {
     cors: {
-        origin: process.env.CLIENT_URL,
+        origin: allowedOrigins,
         credentials: true,
     },
 });
