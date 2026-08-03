@@ -16,12 +16,23 @@ connectDb()
 app.use(helmet());
 app.use(compression());
 app.use(morgan("dev"));
-app.use(
-    cors({
-        origin: process.env.CLIENT_URL,
-        credentials: true,
-    })
-);
+const allowedOrigins = [
+    "https://www.chattalk.website",
+    "https://chat-c5u693dei-self-68af.vercel.app",
+];
+
+app.use(cors({
+    origin(origin, callback) {
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+}));
 //middelware
 app.use(express.json())
 app.use(cookieParser())
