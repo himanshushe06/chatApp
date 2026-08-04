@@ -1,81 +1,68 @@
-# 💬 ChatApp
+# 💬 ChatTalk
 
-A modern full-stack real-time chat application built with the MERN stack, featuring secure authentication, real-time messaging, group chats, media sharing, email verification, and a polished user experience inspired by modern messaging platforms.
+A production-ready real-time chat application built with the MERN Stack, featuring secure authentication, instant messaging, friend management, media sharing, and WhatsApp-inspired messaging features.
 
-![React](https://img.shields.io/badge/React-19-blue?logo=react)
-![Node.js](https://img.shields.io/badge/Node.js-Express-green?logo=node.js)
-![MongoDB](https://img.shields.io/badge/MongoDB-Database-green?logo=mongodb)
-![Socket.IO](https://img.shields.io/badge/Socket.IO-Real--Time-black?logo=socket.io)
-![JWT](https://img.shields.io/badge/Auth-JWT-orange)
-![Cloudinary](https://img.shields.io/badge/Media-Cloudinary-blue)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+🌐 **Live Demo:** https://www.chattalk.website
 
 ---
 
-## ✨ Features
+## 🚀 Features
 
 ### 🔐 Authentication
+- Secure JWT Authentication
 - User Signup & Login
-- JWT Authentication
-- HTTP-Only Cookies
-- Email OTP Verification
-- Secure Password Hashing (bcrypt)
-- Profile Management
+- OTP Email Verification
+- Protected Routes
+- Password Encryption using bcrypt
 
-### 💬 Real-Time Messaging
+### 👤 User Management
+- Edit Profile
+- Profile Picture Upload
+- Cloudinary Image Storage
+- Online / Offline Presence
+
+### 🤝 Friend System
+- Send Friend Requests
+- Accept / Reject Requests
+- Real-Time Friend Request Notifications
+
+### 💬 Messaging
 - One-to-One Chat
 - Group Chat
-- Real-Time Messaging with Socket.IO
+- Instant Messaging using Socket.IO
 - Typing Indicators
-- Online/Offline Status
-- Unread Message Counter
-
-### 📨 Messages
-- Send Text Messages
-- Image Sharing
-- Voice Messages
-- Reply to Messages
+- Message Delivery Status
+- Read Receipts
+- Unread Message Count
 - Edit Messages
 - Delete for Me
 - Delete for Everyone
-- Message Status
-  - ✓ Sent
-  - ✓✓ Delivered
-  - ✓✓ Seen
+- Delete Entire Conversation
 
-### 👥 Friends
-- Friend Requests
-- Accept / Reject Requests
-- Real-Time Updates
-- Instant Chat Creation
+### 📷 Media Support
+- Image Uploads
+- Voice Messages
+- Profile Pictures
 
-### 🎨 User Experience
-- Dark & Light Theme
-- Responsive UI
-- Smooth Animations
-- Interactive Message Menu
-- Professional OTP Verification Flow
-- Beautiful Email Templates
-
-### ☁️ Media
-- Cloudinary Image Upload
-- Profile Picture Upload
-- Secure Storage
+### ⚡ Real-Time Features
+- Live Message Delivery
+- Online User Tracking
+- Instant UI Updates
+- Active Chat Detection
+- Automatic Unread Count Reset
 
 ---
 
-# 🛠 Tech Stack
+# 🛠️ Tech Stack
 
 ## Frontend
 
-- React
-- Vite
+- React.js
 - Tailwind CSS
-- Framer Motion
 - Axios
 - Socket.IO Client
-- React Hot Toast
-- Lucide React
+- React Context API
+- Vite
 
 ## Backend
 
@@ -84,51 +71,95 @@ A modern full-stack real-time chat application built with the MERN stack, featur
 - MongoDB
 - Mongoose
 - Socket.IO
-- JWT
-- bcrypt
+- JWT Authentication
 - Multer
 - Cloudinary
-- Resend Email API
+
+## Database
+
+- MongoDB Atlas
+
+## Tools
+
+- Git
+- GitHub
+- Postman
+- VS Code
+- Resend (Email OTP)
 
 ---
 
 # 📂 Project Structure
 
 ```
-ChatApp
+ChatTalk
 │
-├── frontend
+├── client
 │   ├── src
-│   ├── components
-│   ├── pages
-│   ├── context
-│   ├── services
-│   └── api
+│   ├── public
+│   └── package.json
 │
-├── backend
-│   ├── controller
-│   ├── model
-│   ├── routes
-│   ├── middleware
-│   ├── socket
+├── server
 │   ├── config
-│   └── utils
+│   ├── controllers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   ├── sockets
+│   ├── utils
+│   └── package.json
 │
 └── README.md
 ```
 
 ---
 
-# 🚀 Getting Started
+# 📸 Screenshots
+
+> Replace these placeholders with screenshots from your application.
+
+## Login
+
+![Login](screenshots/login.png)
+
+---
+
+## Chat Window
+
+![Chat](screenshots/chat.png)
+
+---
+
+## Friend Requests
+
+![Friend Requests](screenshots/request.png)
+
+---
+
+## Group Chat
+
+![Group Chat](screenshots/group.png)
+
+---
+
+## Profile
+
+![Profile](screenshots/profile.png)
+
+---
+
+# ⚙️ Installation
 
 ## Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ChatApp.git
+git clone https://github.com/himanshushe06/ChatTalk.git
 ```
 
-```
-cd ChatApp
+Move into the project
+
+```bash
+cd ChatTalk
 ```
 
 ---
@@ -136,7 +167,8 @@ cd ChatApp
 ## Backend Setup
 
 ```bash
-cd backend
+cd server
+
 npm install
 ```
 
@@ -145,19 +177,20 @@ Create a `.env` file
 ```env
 PORT=4000
 
-MONGO_URI=
+MONGO_URI=YOUR_MONGODB_URI
 
-JWT_SECRET=
+JWT_SECRET=YOUR_SECRET
 
 CLOUDINARY_CLOUD_NAME=
+
 CLOUDINARY_API_KEY=
+
 CLOUDINARY_API_SECRET=
 
 RESEND_API_KEY=
-EMAIL_FROM=
 ```
 
-Run backend
+Start backend
 
 ```bash
 npm run dev
@@ -168,67 +201,39 @@ npm run dev
 ## Frontend Setup
 
 ```bash
-cd frontend
+cd client
+
 npm install
-```
 
-Create `.env`
-
-```env
-VITE_API_URL=http://localhost:4000/api
-```
-
-Run
-
-```bash
 npm run dev
 ```
 
 ---
 
-# 📸 Screenshots
-
-> Screenshots will be added shortly.
-
-- Login Page
-- Signup Page
-- OTP Verification
-- Chat Dashboard
-- Group Chat
-- Message Features
-- Profile Settings
-
----
-
-# 🔒 Security Features
-
-- JWT Authentication
-- Password Hashing
-- HTTP-Only Cookies
-- Email OTP Verification
-- Protected Routes
-- Secure File Uploads
-
----
-
-# 📈 Future Improvements
+# 🎯 Future Improvements
 
 - Video Calling
-- Audio Calling
-- Screen Sharing
+- Voice Calling
 - Message Search
-- Push Notifications
 - Message Reactions
+- Pinned Messages
+- Message Forwarding
+- Notifications
+- End-to-End Encryption
 - AI Chat Assistant
-- Mobile Application
 
 ---
 
-# 🤝 Contributing
+# 📈 Highlights
 
-Contributions are welcome.
-
-Fork the repository, create a feature branch, and submit a Pull Request.
+- Real-Time Communication using Socket.IO
+- RESTful API Architecture
+- JWT Authentication
+- Scalable MVC Backend
+- Cloudinary Media Storage
+- Responsive UI
+- Modern React Architecture
+- Clean Code Structure
 
 ---
 
@@ -236,14 +241,22 @@ Fork the repository, create a feature branch, and submit a Pull Request.
 
 **Himanshu Shekhar**
 
-B.E Computer Science Engineering
+LinkedIn
 
-GitHub: https://github.com/himanshushe06
+https://linkedin.com/in/himanshu0602
 
-LinkedIn: https://www.linkedin.com/in/himanshu0602/
+GitHub
+
+https://github.com/himanshushe06
+
+Email
+
+harsh06022005@gmail.com
 
 ---
 
 # ⭐ Support
 
-If you like this project, consider giving it a ⭐ on GitHub.
+If you found this project helpful, consider giving it a ⭐ on GitHub.
+
+It helps others discover the project and supports future development.
